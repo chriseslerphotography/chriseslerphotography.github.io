@@ -1,0 +1,18 @@
+// ** 
+// * THEMING
+// */
+
+// IMPORT MATERIAL THEMING SUPPORT 
+@import '~@angular/material/theming';
+
+// IMPORT THEME CONFIGS
+@import 'themes/dark-theme';
+@import 'themes/light-theme';
+@import 'themes/developing-theme';
+
+// DEFINE THEME MAP
+$app-available-themes: (
+    developing: $developing-theme,
+    light: $light-theme,
+    dark: $dark-theme
+);

@@ -1,0 +1,164 @@
+// **************************************
+// * FUNCTIONS
+// **************************************
+
+// Math
+@function round-to-even-number($number) {
+    @return floor($number / 2) * 2;
+}
+
+@function decimal-round($number, $digits: 0, $mode: round) {
+    $n: 1;
+    // $number must be a number
+    @if type-of($number) != number {
+        @warn '#{ $number } is not a number.';
+        @return $number;
+    }
+    // $digits must be a unitless number
+    @if type-of($digits) != number {
+        @warn '#{ $digits } is not a number.';
+        @return $number;
+    } @else if not unitless($digits) {
+        @warn '#{ $digits } has a unit.';
+        @return $number;
+    }
+    @if $digits > 0 {
+        @for $i from 1 through $digits {
+            $n: $n * 10;
+        }
+    }
+    @if $mode == round {
+        @return round($number * $n) / $n;
+    } @else if $mode == ceil {
+        @return ceil($number * $n) / $n;
+    } @else if $mode == floor {
+        @return floor($number * $n) / $n;
+    } @else {
+        @warn '#{ $mode } is undefined keyword.';
+        @return $number;
+    }
+}
+
+@function pow($number, $exponent) {
+    @if (round($exponent) != $exponent) {
+        @return exp($exponent * ln($number));
+    }
+
+    $value: 1;
+
+    @if $exponent > 0 {
+        @for $i from 1 through $exponent {
+            $value: $value * $number;
+        }
+    } @else if $exponent < 0 {
+        @for $i from 1 through -$exponent {
+            $value: $value / $number;
+        }
+    }
+
+    @return $value;
+}
+
+@function factorial($value) {
+    $result: 1;
+
+    @if $value == 0 {
+        @return $result;
+    }
+
+    @for $index from 1 through $value {
+        $result: $result * $index;
+    }
+
+    @return $result;
+}
+
+@function summation($iteratee, $input, $initial: 0, $limit: 100) {
+    $sum: 0;
+
+    @for $index from $initial to $limit {
+        $sum: $sum + call(get-function($iteratee), $input, $index);
+    }
+
+    @return $sum;
+}
+
+@function exp-maclaurin($x, $n) {
+    @return (pow($x, $n) / factorial($n));
+}
+
+@function exp($value) {
+    @return summation("exp-maclaurin", $value, 0, 100);
+}
+
+@function ln-maclaurin($x, $n) {
+    @return (pow(-1, $n + 1) / $n) * (pow($x - 1, $n));
+}
+
+@function ln($value) {
+    $ten-exp: 1;
+    $ln-ten: 2.30258509;
+
+    @while ($value > pow(10, $ten-exp)) {
+        $ten-exp: $ten-exp + 1;
+    }
+
+    @return summation(ln-maclaurin, $value / pow(10, $ten-exp), 1, 100) + $ten-exp * $ln-ten;
+}
+
+// * Units
+@function em($pixels, $context: $body-size) {
+    @if (unitless($pixels)) {
+        $pixels: $pixels * 1px;
+    }
+
+    @if (unitless($context)) {
+        $context: $context * 1px;
+    }
+
+    @return $pixels / $context * 1em;
+}
+
+@function remove-unit($number) {
+    @if type-of($number) == "number" and not unitless($number) {
+        @return $number / ($number * 0 + 1);
+    }
+    @return $number;
+}
+
+// * color functions
+@function color-luminance($color) {
+    $colors: (
+        "red": red($color),
+        "green": green($color),
+        "blue": blue($color)
+    );
+
+    @each $name, $value in $colors {
+        $adjusted: 0;
+        $value: $value / 255;
+
+        @if $value < 0.03928 {
+            $value: $value / 12.92;
+        } @else {
+            $value: ($value + 0.055) / 1.055;
+            $value: pow($value, 2.4);
+        }
+        $colors: map-merge(
+            $colors,
+            (
+                $name: $value
+            )
+        );
+    }
+    @return (map-get($colors, "red") * 0.2126) + (map-get($colors, "green") * 0.7152) +
+        (map-get($colors, "blue") * 0.0722);
+}
+
+@function find-color-invert($color) {
+    @if (color-luminance($color) > 0.55) {
+        @return rgba($black, 0.95);
+    } @else {
+        @return rgba($white, 0.95);
+    }
+}

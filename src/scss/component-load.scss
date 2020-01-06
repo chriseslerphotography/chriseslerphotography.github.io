@@ -1,0 +1,13 @@
+// **
+// * This is load sequence for component-level imports
+// * meaning this file gets imported in component styles
+// **
+
+// Core Variables & Helpers
+@import 'core';
+
+// right now 
+$app-fontface-config: (
+    mono: generate-material-compatible-typography-config(map-get($app-available-typefaces, roboto-mono)),
+    sans: generate-material-compatible-typography-config(map-get($app-available-typefaces, roboto-sans))
+);

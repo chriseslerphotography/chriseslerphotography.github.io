@@ -1,0 +1,20 @@
+<!-- Print stuff here -->
+<mat-card class="message-card" *ngIf="msg">
+    <mat-card-header>
+        <div mat-card-avatar [style.background-image]="authorImage"></div>
+        <mat-card-title>{{msg.author.name}}</mat-card-title>
+        <mat-card-subtitle>{{msg.updated | date:'mediumDate'}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <p>
+            {{msg.content}}
+        </p>
+    </mat-card-content>
+</mat-card>
+<mat-card class="message-card" *ngIf="!msg">
+    <mat-card-content>
+        <p>
+            LOADING ...
+        </p>
+    </mat-card-content>
+</mat-card>

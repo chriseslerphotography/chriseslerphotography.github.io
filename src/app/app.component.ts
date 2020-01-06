@@ -1,4 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+
+import { AppState } from './shared/store/app.state';
+import { Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +11,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'google-project';
+    @HostBinding('class.app-root') _hostClass = true;
+
+    @Select(AppState.getApp) app$: Observable<any>;
+
+    public constructor() {}
 }

@@ -1,0 +1,37 @@
+@import 'component-load';
+
+.app-root:host {
+    max-width: 100%;
+    width: 100%;
+    display: flex;
+    flex: 1 1 100%;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+@each $theme-name, $theme-config in $app-available-themes {
+
+    /* Theme config parts */
+    $primary: map-get($theme-config, primary);
+    $accent: map-get($theme-config, accent);
+    $warn: map-get($theme-config, warn);
+    $foreground: map-get($theme-config, foreground);
+    $background: map-get($theme-config, background);
+    $is-dark: map-get($theme-config, is-dark);
+
+    /* APP COMPONENT [[  THEME :: #{$theme-name} ]]  */
+
+    // body level to set background
+    :host-context([theme='#{$theme-name}'].mat-app-background) {
+        // App background on body
+        & {
+            background-color: map-get($background, background);
+        }
+    }
+
+    // theme level
+    /*[theme='#{$theme-name}'] :host {
+
+    }*/
+
+}

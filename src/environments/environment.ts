@@ -3,7 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  baseTitle: 'GOOGLE-PROJECT',
+  messageApi: 'https://cors-anywhere.herokuapp.com/http://message-list.appspot.com/',
+  messageImageUrl: 'http://message-list.appspot.com'
 };
 
 /*

@@ -1,0 +1,34 @@
+/* APP SHELL */
+@import 'component-load';
+
+.app-shell:host {
+    max-width: 100%;
+    width: 100%;
+    display: flex;
+    flex: 1 1 100%;
+    flex-direction: column;
+    overflow: hidden;
+
+    .content-outlet {
+        display: flex;
+        flex: 1;
+    }
+}
+
+@each $theme-name, $theme-config in $app-available-themes {
+
+    // * Theme config parts */
+    $primary: map-get($theme-config, primary);
+    $accent: map-get($theme-config, accent);
+    $warn: map-get($theme-config, warn);
+    $foreground: map-get($theme-config, foreground);
+    $background: map-get($theme-config, background);
+    $is-dark: map-get($theme-config, is-dark);
+
+    /* APP COMPONENT [[  THEME :: #{$theme-name} ]]  */
+
+    // theme level
+    //:host-context([theme='#{$theme-name}']) {
+    // [theme='#{$theme-name}'] :host {}
+
+}
