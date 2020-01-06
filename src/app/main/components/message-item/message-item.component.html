@@ -1,5 +1,9 @@
 <!-- Print stuff here -->
-<mat-card class="message-card" *ngIf="msg">
+<mat-card class="message-card" *ngIf="msg"
+    [@cardAnimator]="animationState"
+    (@cardAnimator.done)="animationDone()"
+    (swipeleft)="startAnimation('ellipticLeftBack')"
+    (swiperight)="startAnimation('ellipticRightBack')">
     <mat-card-header>
         <div mat-card-avatar [style.background-image]="authorImage"></div>
         <mat-card-title>{{msg.author.name}}</mat-card-title>

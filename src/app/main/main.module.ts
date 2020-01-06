@@ -7,11 +7,12 @@ import { MainComponent } from "./container/main.component";
 
 import { NgxsModule } from '@ngxs/store';
 
-import { MessagesService } from './services/messages.service';
 import { MessagesState } from './store/messages.state';
 
 import { MaterialModule } from '../core/material.module';
 import { MessageItemComponent } from './components/message-item/message-item.component';
+
+import { SwingModule } from 'angular2-swing';
 
 @NgModule({
     declarations: [
@@ -22,6 +23,7 @@ import { MessageItemComponent } from './components/message-item/message-item.com
         CommonModule,
         MainRoutingModule,
         MaterialModule,
+        SwingModule,
         NgxsModule.forFeature([
             MessagesState
         ])

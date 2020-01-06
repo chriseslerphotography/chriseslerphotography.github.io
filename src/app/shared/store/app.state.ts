@@ -12,7 +12,6 @@ export class GetAppName {
   export class AppState {
     constructor() {}
 
-
     @Selector()
     static getApp(state: string | null) {
         return state;

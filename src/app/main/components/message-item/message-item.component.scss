@@ -2,7 +2,16 @@
 
 .message-item:host {
     display: flex;
-    height: 100px;
+    min-height: 100px;
+    padding: 8px 16px;
+
+    &.hidden {
+        display: none;
+    }
+
+    .message-card {
+        min-width: 100%;
+    }
 }
 
 @each $theme-name, $theme-config in $app-available-themes {

@@ -2,17 +2,25 @@
 @import 'component-load';
 
 .app-main:host {
-    // padding: 24px;
     display: flex;
     flex: 1;
+    position: relative;
 }
 
 :host {
     .messages-scroller {
-        flex: 1;
-        min-height: 100%;
+        //flex: 1;
+        //min-height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
     }
 
+    .message-container {
+        position: relative;
+    }
 }
 
 @each $theme-name, $theme-config in $app-available-themes {

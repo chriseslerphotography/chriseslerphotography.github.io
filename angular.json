@@ -131,7 +131,8 @@
                         "email": "chris.esler@gmail.com",
                         "noSilent": true,
                         "branch": "master",
-                        "cname": "test.chriseslerphotography.com"
+                        "cname": "test.chriseslerphotography.com",
+                        "message": "deploying website"
                     },
                     "configurations": {
                         "production": {

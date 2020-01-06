@@ -9,6 +9,7 @@ import { PlatformModule } from '@angular/cdk/platform';
 import { PortalModule } from '@angular/cdk/portal';
 import { CdkTableModule } from '@angular/cdk/table';
 import { ScrollingModule} from '@angular/cdk/scrolling';
+import { ScrollingModule as ExperimentalScrollingModule } from '@angular/cdk-experimental/scrolling';
 import {
   MatAutocompleteModule,
   MatButtonModule,
@@ -92,7 +93,8 @@ import {
     OverlayModule,
     PlatformModule,
     PortalModule,
-    ScrollingModule
+    ScrollingModule,
+    ExperimentalScrollingModule
   ]
 })
 export class MaterialModule {}

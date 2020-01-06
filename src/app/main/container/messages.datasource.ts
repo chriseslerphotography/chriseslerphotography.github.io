@@ -7,49 +7,50 @@
  * https://alligator.io/angular/infinite-scroll/
  */
 
-import { CollectionViewer, DataSource } from "@angular/cdk/collections";
+import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 
 import {
     MessagesState,
     MessageModel,
     MSFetchMessages
-} from "../store/messages.state";
+} from '../store/messages.state';
 
-import { Subscription, BehaviorSubject, Observable } from "rxjs";
+import { Subscription, BehaviorSubject, Observable } from 'rxjs';
 
-import { Select, Selector, Store } from "@ngxs/store";
+import { Select, Selector, Store } from '@ngxs/store';
+import { NgZone } from '@angular/core';
 
 export class MessagesDataSource extends DataSource<MessageModel | undefined> {
     // NGXS store items
-    @Select(MessagesState.getMessages) messages$: Observable<MessageModel[]>;
     @Select(MessagesState.getPageToken) pageToken$: Observable<string | null>;
+    @Select(MessagesState.getDeleted) deleted$: Observable<number | null>;
 
-    // data stream for virtual items
-    private dataStream: BehaviorSubject<(MessageModel | undefined)[]> = new BehaviorSubject<(MessageModel | undefined)[]>(Array.from<MessageModel>({
-        length: 0
-    }));
+    // dataStream is a NGXS Stream
+    @Select(MessagesState.getMessages) dataStream: Observable<MessageModel[]>;
 
     // subscription container
     private subscription: Subscription = new Subscription();
 
-    private limitSize = 50;                     // number of items per 'page'
-    private lastPage = 0;                       // last page loaded
-    private pageToken: string | null = null;    // page token returned from last request
+    private limitSize = 50; // number of items per 'page'
+    private lastPage = 0; // last page loaded
+    private pageToken: string | null = null; // page token returned from last request
+    // tslint:disable-next-line: no-inferrable-types
+    private deleted: number = 0;
 
     constructor(private store: Store) {
         super(); // call DataSource constructor
 
         // add NGXS Store subscriptions
-        this.subscription.add(
-            this.messages$.subscribe(messages => {
-                // update the data stream
-                this.dataStream.next(messages);
-            })
-        );
 
         this.subscription.add(
             this.pageToken$.subscribe(pageToken => {
                 this.pageToken = pageToken;
+            })
+        );
+
+        this.subscription.add(
+            this.deleted$.subscribe(deleted => {
+                this.deleted = deleted;
             })
         );
 
@@ -71,11 +72,17 @@ export class MessagesDataSource extends DataSource<MessageModel | undefined> {
 
     connect(
         collectionViewer: CollectionViewer
-    ): Observable<(MessageModel | undefined)[] | ReadonlyArray<MessageModel | undefined>> {
+    ): Observable<
+        (MessageModel | undefined)[] | ReadonlyArray<MessageModel | undefined>
+    > {
+        console.log('CDATA SOURCE CONNECT');
         this.subscription.add(
             collectionViewer.viewChange.subscribe(range => {
+                console.log('COLLECTION VIEWER :: VIEW CHANGE', range);
                 // Update the data
-                const currentPage = this._getPageForIndex(range.end);
+                const currentPage = this._getPageForIndex(
+                    range.end + this.deleted
+                );
                 // check if we've loaded page, and if not get data
                 if (currentPage > this.lastPage) {
                     this.lastPage = currentPage;
@@ -83,6 +90,7 @@ export class MessagesDataSource extends DataSource<MessageModel | undefined> {
                 }
             })
         );
+
         return this.dataStream;
     }
 

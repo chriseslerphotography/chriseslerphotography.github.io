@@ -1,3 +1,5 @@
-<cdk-virtual-scroll-viewport itemSize="100" class="messages-scroller">
-<message-item *cdkVirtualFor="let msg of messagesDataSource" [message-item]="msg"></message-item>
+<cdk-virtual-scroll-viewport class="messages-scroller" autosize #messageScrollViewport>
+    <div class="message-container"  *cdkVirtualFor="let msg of messagesDataSource" #messagesScrollFor>
+        <message-item [message-item]="msg" (messageEvent)="messageEvent($event)"></message-item>
+    </div>
 </cdk-virtual-scroll-viewport>

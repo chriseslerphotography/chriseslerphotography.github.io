@@ -21,13 +21,15 @@ export interface MessageModel {
     };
     updated: string;
     content: string;
+    hidden?: boolean;
 }
 
 export interface MessagesStateModel {
     pageToken: string | null;
     loading: boolean;
     error: {};
-    messages: MessageModel[];
+    messages: any[];
+    deleted: number;
 }
 
 /* action descriptors */
@@ -47,6 +49,13 @@ export class MSFetchMessagesSuccess {
     ) {}
 }
 
+export class MSRemoveMessage {
+    public static type = '[Message State] Remove Message';
+    constructor (
+        public readonly id: number
+    ) {}
+}
+
 export class MSError {
     public static type = '[Message State] Error Happened';
     constructor (
@@ -63,7 +72,8 @@ export class MSError {
         pageToken: null,
         loading: false,
         error: {},
-        messages: []
+        messages: [],
+        deleted: 0
     }
 })
 export class MessagesState {
@@ -93,17 +103,24 @@ export class MessagesState {
         return state.messages;
     }
 
+    @Selector()
+    static getDeleted(state: MessagesStateModel) {
+        return state.deleted;
+    }
+
     /** actions */
 
     @Action(MSError)
     ms_error(ctx: StateContext<MessagesStateModel>, { error, label}: MSError) {
-        console.error('STATE :: ' + label, error);
+        console.group('%cSTATE ERROR :: ' + label, 'padding: 4px; color: white; background: red; font-weight: bold;');
+        console.log({error});
+        console.groupEnd();
         ctx.dispatch({ error });
     }
 
     @Action(MSFetchMessages)
     fetchMessage(ctx: StateContext<MessagesStateModel>, { limit, pageToken }: MSFetchMessages) {
-        console.group('%c' + MSFetchMessages.type, 'padding: 4px; color: white; background: magenta; font-weight: bold;');
+        console.group('%c' + MSFetchMessages.type, 'padding: 4px; color: white; background: darkmagenta; font-weight: bold;');
         console.log({limit, pageToken});
         console.groupEnd();
 
@@ -132,5 +149,28 @@ export class MessagesState {
                 pageToken: response.pageToken
             });
         }
+    }
+
+    @Action(MSRemoveMessage)
+    removeMessage(ctx: StateContext<MessagesStateModel>, { id }: MSRemoveMessage) {
+        console.group('%c' + MSRemoveMessage.type, 'padding: 4px; color: white; background: slategray; font-weight: bold;');
+        console.log({id});
+        console.groupEnd();
+
+        const state: any = ctx.getState();
+
+        let messages: any[] = state.messages.slice(); // quick clone
+        let deleted = (Number(state.deleted)) + 1;
+
+        const idx = messages.findIndex(val => val.id === id);
+
+        let updatedMessage = {...messages[idx], hidden: true};
+
+        messages[idx] = updatedMessage;
+
+        ctx.setState({...state,
+            messages,
+            deleted
+        });
     }
 }
