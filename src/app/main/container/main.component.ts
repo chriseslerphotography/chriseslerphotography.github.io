@@ -16,8 +16,7 @@ import {
 
 import {
     MessagesState,
-    MSRemoveMessage,
-    MessageModel
+    MSRemoveMessage
 } from '../store/messages.state';
 
 import {
@@ -26,10 +25,8 @@ import {
 } from 'rxjs';
 
 import { MessagesDataSource } from './messages.datasource';
-import { CdkVirtualScrollViewport, CdkVirtualForOf, ScrollDispatcher } from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { skip } from 'rxjs/operators';
-import { ListRange } from '@angular/cdk/collections';
-
 
 @Component({
     selector: 'app-main',
@@ -64,8 +61,7 @@ export class MainComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // CONSTRUCTOR AND ANGULAR SPECIFIC METHODS
     constructor(
-        private store: Store,
-        private cdRef: ChangeDetectorRef
+        private store: Store
     ) {
         // initialize custom datasource, passing in NGXS store
         this.messagesDataSource = new MessagesDataSource(store);

@@ -2,9 +2,7 @@ import {
     State,
     Action,
     Selector,
-    StateContext,
-    NgxsOnInit,
-    NgxsAfterBootstrap
+    StateContext
 } from '@ngxs/store';
 
 import { MessagesService } from '../services/messages.service';

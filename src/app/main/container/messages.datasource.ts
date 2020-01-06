@@ -75,10 +75,10 @@ export class MessagesDataSource extends DataSource<MessageModel | undefined> {
     ): Observable<
         (MessageModel | undefined)[] | ReadonlyArray<MessageModel | undefined>
     > {
-        console.log('CDATA SOURCE CONNECT');
+        //console.log('CDATA SOURCE CONNECT');
         this.subscription.add(
             collectionViewer.viewChange.subscribe(range => {
-                console.log('COLLECTION VIEWER :: VIEW CHANGE', range);
+                //console.log('COLLECTION VIEWER :: VIEW CHANGE', range);
                 // Update the data
                 const currentPage = this._getPageForIndex(
                     range.end + this.deleted
